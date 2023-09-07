@@ -1,0 +1,27 @@
+#Start(1694078308762)
+
+  Warning number 27
+  /Users/amritaarora/Desktop/expense_tracker/src/App.res:64:33
+
+  62 ┆ }
+  63 ┆ 
+  64 ┆ let handleTransactionSubmit = e => {
+  65 ┆   dispatch(AddTransaction)
+  66 ┆   Js.String.slice(~from=0, ~to_=1, state.amtOfTransaction) == "-"
+
+  unused variable e.
+
+
+  Warning number 3
+  /Users/amritaarora/Desktop/expense_tracker/src/index.res:4:6-11
+
+  2 │ 
+  3 │ let rootQuery = ReactDOM.querySelector("#root")
+  4 │ let {render, querySelector} = module(ReactDOM)
+  5 │ 
+  6 │ switch rootQuery {
+
+  deprecated: ReactDOM.render
+  ReactDOM.render is no longer supported in React 18. Use ReactDOM.Client.createRoot instead.
+
+#Done(1694078308833)
