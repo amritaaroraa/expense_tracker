@@ -74,7 +74,7 @@ function App(Props) {
     Curry._1(dispatch, /* AddTransaction */0);
     if (Js_string.slice(0, 1, state.amtOfTransaction) === "-") {
       return Curry._1(setExpense, (function (_prev) {
-                    var v = Belt_Int.fromString(state.amtOfTransaction);
+                    var v = Belt_Int.fromString(Js_string.sliceToEnd(1, state.amtOfTransaction));
                     return _prev + (
                             v !== undefined ? v : -1
                           ) | 0;
@@ -89,10 +89,10 @@ function App(Props) {
     }
   };
   var list = Belt_Array.map(state.transactionList, (function (transaction) {
-          return React.createElement("div", {
+          return React.createElement("ul", {
                       key: transaction.typeOfTransaction,
-                      className: "listOfTransaction"
-                    }, React.createElement("h3", undefined, transaction.typeOfTransaction), React.createElement("h3", undefined, transaction.amtOfTransaction));
+                      className: "list-of-transaction"
+                    }, React.createElement("li", undefined, transaction.typeOfTransaction, React.createElement("span", undefined, "$" + transaction.amtOfTransaction)));
         }));
   React.useEffect((function () {
           console.log(expense);
@@ -100,26 +100,34 @@ function App(Props) {
   return React.createElement("div", {
               className: "App"
             }, React.createElement("h1", undefined, "Expense Tracker"), React.createElement("div", {
-                  className: "heading"
-                }, React.createElement("h2", undefined, "Your Balance: " + String(income - expense | 0)), React.createElement("h2", undefined, "Income: " + String(income)), React.createElement("h2", undefined, "Expense: " + String(expense))), React.createElement("div", undefined, list), React.createElement("div", {
-                  className: "form"
-                }, React.createElement("div", {
-                      className: "transactionForm"
-                    }, React.createElement("label", undefined, "Text"), React.createElement("input", {
-                          name: "typeOfTransaction",
-                          type: "text",
-                          value: state.typeOfTransaction,
-                          onChange: handleTypeOfTransaction
-                        })), React.createElement("div", {
-                      className: "transactionForm"
-                    }, React.createElement("label", undefined, "Amount (negative - expense, positive - income)"), React.createElement("input", {
-                          name: "amtOfTransaction",
-                          type: "text",
-                          value: state.amtOfTransaction,
-                          onChange: handleAmtOfTransaction
-                        }))), React.createElement("button", {
-                  onClick: handleTransactionSubmit
-                }, "Add Transaction"));
+                  className: "expense-tracker-form-container"
+                }, React.createElement("h4", undefined, "Your Balance: "), React.createElement("h1", {
+                      id: "balance"
+                    }, "$" + String(income - expense | 0)), React.createElement("div", {
+                      className: "income-expense-display"
+                    }, React.createElement("div", undefined, React.createElement("h4", undefined, "Income: "), React.createElement("p", {
+                              className: "income-money"
+                            }, "$" + String(income))), React.createElement("div", undefined, React.createElement("h4", undefined, "Expense: "), React.createElement("p", {
+                              className: "expense-money"
+                            }, "$" + String(expense)))), React.createElement("h3", undefined, "History"), React.createElement("div", undefined, list), React.createElement("h3", undefined, "Add New Transaction"), React.createElement("div", undefined, React.createElement("div", {
+                          className: "transaction-form"
+                        }, React.createElement("label", undefined, "Text"), React.createElement("input", {
+                              name: "typeOfTransaction",
+                              type: "text",
+                              value: state.typeOfTransaction,
+                              onChange: handleTypeOfTransaction
+                            })), React.createElement("div", {
+                          className: "transaction-form"
+                        }, React.createElement("label", undefined, "Amount (negative - expense, positive - income)"), React.createElement("input", {
+                              name: "amtOfTransaction",
+                              type: "text",
+                              value: state.amtOfTransaction,
+                              onChange: handleAmtOfTransaction
+                            }))), React.createElement("div", {
+                      className: "add-transaction-btn"
+                    }, React.createElement("button", {
+                          onClick: handleTransactionSubmit
+                        }, "Add Transaction"))));
 }
 
 var make = App;

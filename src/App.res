@@ -66,7 +66,7 @@ let make = () => {
     Js.String.slice(~from=0, ~to_=1, state.amtOfTransaction) == "-"
       ? setExpense(_prev =>
           _prev +
-          switch Belt.Int.fromString(state.amtOfTransaction) {
+          switch Belt.Int.fromString(Js.String.sliceToEnd(~from=1, state.amtOfTransaction)) {
           | None => -1
           | Some(v) => v
           }
@@ -81,10 +81,12 @@ let make = () => {
   }
 
   let list = Belt.Array.map(state.transactionList, transaction => {
-    <div className="listOfTransaction" key={transaction.typeOfTransaction}>
-      <h3> {React.string(transaction.typeOfTransaction)} </h3>
-      <h3> {React.string(transaction.amtOfTransaction)} </h3>
-    </div>
+    <ul className="list-of-transaction" key={transaction.typeOfTransaction}>
+      <li>
+        {React.string(transaction.typeOfTransaction)}
+        <span> {React.string("$" ++ transaction.amtOfTransaction)} </span>
+      </li>
+    </ul>
   })
 
   React.useEffect1(() => {
@@ -94,32 +96,45 @@ let make = () => {
 
   <div className="App">
     <h1> {React.string("Expense Tracker")} </h1>
-    <div className="heading">
-      <h2> {React.string("Your Balance: " ++ Belt.Int.toString(income - expense))} </h2>
-      <h2> {React.string("Income: " ++ Belt.Int.toString(income))} </h2>
-      <h2> {React.string("Expense: " ++ Belt.Int.toString(expense))} </h2>
-    </div>
-    <div> {React.array(list)} </div>
-    <div className="form">
-      <div className="transactionForm">
-        <label> {React.string("Text")} </label>
-        <input
-          name="typeOfTransaction"
-          value={state.typeOfTransaction}
-          type_="text"
-          onChange={handleTypeOfTransaction}
-        />
+    <div className="expense-tracker-form-container">
+      <h4> {React.string("Your Balance: ")} </h4>
+      <h1 id="balance"> {React.string("$" ++ Belt.Int.toString(income - expense))} </h1>
+      <div className="income-expense-display">
+        <div>
+          <h4> {React.string("Income: ")} </h4>
+          <p className="income-money"> {React.string("$" ++ Belt.Int.toString(income))} </p>
+        </div>
+        <div>
+          <h4> {React.string("Expense: ")} </h4>
+          <p className="expense-money"> {React.string("$" ++ Belt.Int.toString(expense))} </p>
+        </div>
       </div>
-      <div className="transactionForm">
-        <label> {React.string("Amount (negative - expense, positive - income)")} </label>
-        <input
-          name="amtOfTransaction"
-          value={state.amtOfTransaction}
-          type_="text"
-          onChange={handleAmtOfTransaction}
-        />
+      <h3> {React.string("History")} </h3>
+      <div> {React.array(list)} </div>
+      <h3> {React.string("Add New Transaction")} </h3>
+      <div>
+        <div className="transaction-form">
+          <label> {React.string("Text")} </label>
+          <input
+            name="typeOfTransaction"
+            value={state.typeOfTransaction}
+            type_="text"
+            onChange={handleTypeOfTransaction}
+          />
+        </div>
+        <div className="transaction-form">
+          <label> {React.string("Amount (negative - expense, positive - income)")} </label>
+          <input
+            name="amtOfTransaction"
+            value={state.amtOfTransaction}
+            type_="text"
+            onChange={handleAmtOfTransaction}
+          />
+        </div>
+      </div>
+      <div className="add-transaction-btn">
+        <button onClick={handleTransactionSubmit}> {"Add Transaction"->React.string} </button>
       </div>
     </div>
-    <button onClick={handleTransactionSubmit}> {"Add Transaction"->React.string} </button>
   </div>
 }

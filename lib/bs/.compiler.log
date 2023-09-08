@@ -1,4 +1,4 @@
-#Start(1694078308762)
+#Start(1694151063778)
 
   Warning number 27
   /Users/amritaarora/Desktop/expense_tracker/src/App.res:64:33
@@ -24,4 +24,4 @@
   deprecated: ReactDOM.render
   ReactDOM.render is no longer supported in React 18. Use ReactDOM.Client.createRoot instead.
 
-#Done(1694078308833)
+#Done(1694151063859)
