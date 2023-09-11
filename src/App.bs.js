@@ -5,14 +5,18 @@ import * as React from "react";
 import * as Belt_Int from "rescript/lib/es6/belt_Int.js";
 import * as Js_string from "rescript/lib/es6/js_string.js";
 import * as Belt_Array from "rescript/lib/es6/belt_Array.js";
+import * as Belt_Option from "rescript/lib/es6/belt_Option.js";
+import * as Caml_option from "rescript/lib/es6/caml_option.js";
 
 import './App.css';
 ;
 
-var initialState_transactionList = [];
+var messageOpt = localStorage.getItem("listOfTransaction");
+
+var transactionList = messageOpt !== null ? JSON.parse(messageOpt) : [];
 
 var initialState = {
-  transactionList: initialState_transactionList,
+  transactionList: transactionList,
   typeOfTransaction: "",
   amtOfTransaction: ""
 };
@@ -95,8 +99,8 @@ function App(Props) {
                     }, React.createElement("li", undefined, transaction.typeOfTransaction, React.createElement("span", undefined, "$" + transaction.amtOfTransaction)));
         }));
   React.useEffect((function () {
-          console.log(expense);
-        }), [expense]);
+          localStorage.setItem("listOfTransaction", Belt_Option.getWithDefault(JSON.stringify(state.transactionList), "[]"));
+        }), [state.transactionList]);
   return React.createElement("div", {
               className: "App"
             }, React.createElement("h1", undefined, "Expense Tracker"), React.createElement("div", {
@@ -130,9 +134,13 @@ function App(Props) {
                         }, "Add Transaction"))));
 }
 
+var messageOpt$1 = messageOpt === null ? undefined : Caml_option.some(messageOpt);
+
 var make = App;
 
 export {
+  messageOpt$1 as messageOpt,
+  transactionList ,
   initialState ,
   reducer ,
   make ,

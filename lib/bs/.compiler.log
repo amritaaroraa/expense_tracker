@@ -1,13 +1,13 @@
-#Start(1694151063778)
+#Start(1694256357684)
 
   Warning number 27
-  /Users/amritaarora/Desktop/expense_tracker/src/App.res:64:33
+  /Users/amritaarora/Desktop/expense_tracker/src/App.res:75:33
 
-  62 ┆ }
-  63 ┆ 
-  64 ┆ let handleTransactionSubmit = e => {
-  65 ┆   dispatch(AddTransaction)
-  66 ┆   Js.String.slice(~from=0, ~to_=1, state.amtOfTransaction) == "-"
+  73 ┆ }
+  74 ┆ 
+  75 ┆ let handleTransactionSubmit = e => {
+  76 ┆   dispatch(AddTransaction)
+  77 ┆   if Js.String.slice(~from=0, ~to_=1, state.amtOfTransaction) == "-" {
 
   unused variable e.
 
@@ -24,4 +24,4 @@
   deprecated: ReactDOM.render
   ReactDOM.render is no longer supported in React 18. Use ReactDOM.Client.createRoot instead.
 
-#Done(1694151063859)
+#Done(1694256357764)

@@ -11,11 +11,22 @@ type state = {
   amtOfTransaction: string,
 }
 
+@scope("JSON") @val
+external parseIntoMyData: string => array<addTransaction> = "parse"
+
 type action =
-  AddTransaction | TypeOfTransactionInputChanged(string) | AmtOfTransactionInputChanged(string)
+  | AddTransaction
+  | TypeOfTransactionInputChanged(string)
+  | AmtOfTransactionInputChanged(string)
+
+let messageOpt = Dom.Storage2.getItem(Dom.Storage2.localStorage, "listOfTransaction")
+let transactionList = switch messageOpt {
+| None => []
+| Some(value) => parseIntoMyData(value)
+}
 
 let initialState = {
-  transactionList: [],
+  transactionList,
   typeOfTransaction: "",
   amtOfTransaction: "",
 }
@@ -63,21 +74,23 @@ let make = () => {
 
   let handleTransactionSubmit = e => {
     dispatch(AddTransaction)
-    Js.String.slice(~from=0, ~to_=1, state.amtOfTransaction) == "-"
-      ? setExpense(_prev =>
-          _prev +
-          switch Belt.Int.fromString(Js.String.sliceToEnd(~from=1, state.amtOfTransaction)) {
-          | None => -1
-          | Some(v) => v
-          }
-        )
-      : setIncome(_prev =>
-          _prev +
-          switch Belt.Int.fromString(state.amtOfTransaction) {
-          | None => -1
-          | Some(v) => v
-          }
-        )
+    if Js.String.slice(~from=0, ~to_=1, state.amtOfTransaction) == "-" {
+      setExpense(_prev =>
+        _prev +
+        switch Belt.Int.fromString(Js.String.sliceToEnd(~from=1, state.amtOfTransaction)) {
+        | None => -1
+        | Some(v) => v
+        }
+      )
+    } else {
+      setIncome(_prev =>
+        _prev +
+        switch Belt.Int.fromString(state.amtOfTransaction) {
+        | None => -1
+        | Some(v) => v
+        }
+      )
+    }
   }
 
   let list = Belt.Array.map(state.transactionList, transaction => {
@@ -90,9 +103,13 @@ let make = () => {
   })
 
   React.useEffect1(() => {
-    Js.log(expense)
+    Dom.Storage2.setItem(
+      Dom.Storage2.localStorage,
+      "listOfTransaction",
+      Belt.Option.getWithDefault(Js.Json.stringifyAny(state.transactionList), "[]"),
+    )
     None
-  }, [expense])
+  }, [state.transactionList])
 
   <div className="App">
     <h1> {React.string("Expense Tracker")} </h1>
